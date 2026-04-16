@@ -1,0 +1,74 @@
+module SurvivorEconomy
+{
+    item TradingPost_General
+    {
+        DisplayName = Trading Post (General),
+        Icon = Item_TradingPost,
+        Type = Normal,
+        Weight = 10,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_TradingPost_General,
+        Tags = TradingPost,
+        WorldStaticModel = TradingPost,
+    }
+
+    item TradingPost_Weapons
+    {
+        DisplayName = Trading Post (Weapons),
+        Icon = Item_TradingPost,
+        Type = Normal,
+        Weight = 10,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_TradingPost_Weapons,
+        Tags = TradingPost,
+        WorldStaticModel = TradingPost,
+    }
+
+    item TradingPost_Medical
+    {
+        DisplayName = Trading Post (Medical),
+        Icon = Item_TradingPost,
+        Type = Normal,
+        Weight = 10,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_TradingPost_Medical,
+        Tags = TradingPost,
+        WorldStaticModel = TradingPost,
+    }
+
+    item TradingPost_Building
+    {
+        DisplayName = Trading Post (Building),
+        Icon = Item_TradingPost,
+        Type = Normal,
+        Weight = 10,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_TradingPost_Building,
+        Tags = TradingPost,
+        WorldStaticModel = TradingPost,
+    }
+
+    item TradingPost_Farm
+    {
+        DisplayName = Trading Post (Farm),
+        Icon = Item_TradingPost,
+        Type = Normal,
+        Weight = 10,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_TradingPost_Farm,
+        Tags = TradingPost,
+        WorldStaticModel = TradingPost,
+    }
+
+    item TradingPost_Luxury
+    {
+        DisplayName = Trading Post (Luxury),
+        Icon = Item_TradingPost,
+        Type = Normal,
+        Weight = 10,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_TradingPost_Luxury,
+        Tags = TradingPost,
+        WorldStaticModel = TradingPost,
+    }
+}

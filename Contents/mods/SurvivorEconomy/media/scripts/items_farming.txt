@@ -1,0 +1,46 @@
+module SurvivorEconomy
+{
+    item Manure
+    {
+        DisplayName = Bag of Manure,
+        Icon = Item_Manure,
+        Type = Normal,
+        Weight = 2.0,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_Manure,
+        Tags = FarmSupply,
+    }
+
+    item PremiumSeeds
+    {
+        DisplayName = Premium Seed Pack,
+        Icon = Item_PremiumSeeds,
+        Type = Normal,
+        Weight = 0.3,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_PremiumSeeds,
+        Tags = FarmSupply,
+    }
+
+    item IrrigationKit
+    {
+        DisplayName = Irrigation Kit,
+        Icon = Item_IrrigationKit,
+        Type = Normal,
+        Weight = 3.0,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_IrrigationKit,
+        Tags = FarmSupply,
+    }
+
+    item PestSpray
+    {
+        DisplayName = Pest Control Spray,
+        Icon = Item_PestSpray,
+        Type = Normal,
+        Weight = 1.0,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_PestSpray,
+        Tags = FarmSupply,
+    }
+}

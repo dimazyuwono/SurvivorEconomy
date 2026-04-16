@@ -1,0 +1,38 @@
+module SurvivorEconomy
+{
+    item ScrapChip
+    {
+        DisplayName = Scrap Chip,
+        Icon = Item_ScrapChip,
+        Type = Normal,
+        Weight = 0.05,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_ScrapChip,
+        WorldStaticModel = ScrapChip,
+        Tags = Currency,
+    }
+
+    item TradeToken
+    {
+        DisplayName = Trade Token,
+        Icon = Item_TradeToken,
+        Type = Normal,
+        Weight = 0.1,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_TradeToken,
+        WorldStaticModel = TradeToken,
+        Tags = Currency,
+    }
+
+    item SurvivorCoin
+    {
+        DisplayName = Survivor Coin,
+        Icon = Item_SurvivorCoin,
+        Type = Normal,
+        Weight = 0.2,
+        DisplayCategory = Economy,
+        Tooltip = Tooltip_SurvivorCoin,
+        WorldStaticModel = SurvivorCoin,
+        Tags = Currency,
+    }
+}
