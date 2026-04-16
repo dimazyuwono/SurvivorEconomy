@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package mod
+        run: |
+          mkdir -p dist
+          # Package only the mod files needed by PZ
+          zip -r dist/SurvivorEconomy-${{ github.ref_name }}.zip \
+            mod.info \
+            Contents/ \
+            -x "*.git*"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/SurvivorEconomy-${{ github.ref_name }}.zip
+          generate_release_notes: true

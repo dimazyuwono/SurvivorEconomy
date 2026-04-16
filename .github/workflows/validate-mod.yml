@@ -1,0 +1,115 @@
+name: Validate Mod Structure
+
+on:
+  push:
+    branches: [main, phase-*]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate PZ Mod
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check mod.info exists and has required fields
+        run: |
+          echo "=== Checking mod.info ==="
+          test -f mod.info || (echo "ERROR: mod.info not found" && exit 1)
+
+          for field in name id description pzversion; do
+            if ! grep -q "^${field}=" mod.info; then
+              echo "ERROR: Missing required field '${field}' in mod.info"
+              exit 1
+            fi
+          done
+          echo "mod.info OK"
+
+      - name: Check mod directory structure
+        run: |
+          echo "=== Checking directory structure ==="
+          DIRS=(
+            "Contents/mods/SurvivorEconomy/media/lua/shared/SurvivorEconomy"
+            "Contents/mods/SurvivorEconomy/media/lua/server/SurvivorEconomy"
+            "Contents/mods/SurvivorEconomy/media/lua/client/SurvivorEconomy"
+            "Contents/mods/SurvivorEconomy/media/scripts"
+          )
+          for dir in "${DIRS[@]}"; do
+            if [ ! -d "$dir" ]; then
+              echo "ERROR: Missing directory $dir"
+              exit 1
+            fi
+            echo "  OK: $dir"
+          done
+          echo "Structure OK"
+
+      - name: Check item scripts syntax
+        run: |
+          echo "=== Checking item script files ==="
+          for f in Contents/mods/SurvivorEconomy/media/scripts/*.txt; do
+            echo "Checking $f..."
+            # Verify module declaration exists
+            if ! grep -q "^module " "$f"; then
+              echo "ERROR: $f missing 'module' declaration"
+              exit 1
+            fi
+            # Verify matching braces
+            OPEN=$(grep -c '{' "$f" || true)
+            CLOSE=$(grep -c '}' "$f" || true)
+            if [ "$OPEN" != "$CLOSE" ]; then
+              echo "ERROR: $f has mismatched braces (open=$OPEN close=$CLOSE)"
+              exit 1
+            fi
+            echo "  OK: $f"
+          done
+          echo "Scripts OK"
+
+      - name: Check Lua files for syntax errors
+        run: |
+          echo "=== Checking Lua syntax ==="
+          sudo apt-get update -qq && sudo apt-get install -y -qq lua5.1 > /dev/null
+          ERRORS=0
+          for f in $(find Contents/mods/SurvivorEconomy/media/lua -name '*.lua'); do
+            if ! luac -p "$f" 2>/dev/null; then
+              echo "SYNTAX ERROR: $f"
+              luac -p "$f" || true
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "ERROR: $ERRORS file(s) with syntax errors"
+            exit 1
+          fi
+          echo "All Lua files OK"
+
+      - name: Check for require path consistency
+        run: |
+          echo "=== Checking require paths ==="
+          # Ensure all require paths reference existing files
+          ERRORS=0
+          for f in $(find Contents/mods/SurvivorEconomy/media/lua -name '*.lua'); do
+            while IFS= read -r line; do
+              # Extract the path from require "path"
+              path=$(echo "$line" | sed -n 's/.*require\s*"\([^"]*\)".*/\1/p')
+              if [ -z "$path" ]; then continue; fi
+
+              # Skip PZ engine requires (ISUI/, etc.)
+              case "$path" in
+                ISUI/*|ISInventoryPaneContextMenu*) continue ;;
+              esac
+
+              # Check if corresponding file exists in shared/server/client
+              FOUND=0
+              for base in shared server client; do
+                if [ -f "Contents/mods/SurvivorEconomy/media/lua/${base}/${path}.lua" ]; then
+                  FOUND=1
+                  break
+                fi
+              done
+              if [ "$FOUND" -eq 0 ]; then
+                echo "WARNING: $f requires '$path' but file not found in mod"
+              fi
+            done < "$f"
+          done
+          echo "Require paths checked"

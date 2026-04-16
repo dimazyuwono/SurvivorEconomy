@@ -1,0 +1,36 @@
+name: Lint
+
+on:
+  push:
+    branches: [main, phase-*]
+  pull_request:
+    branches: [main]
+
+jobs:
+  luacheck:
+    name: Luacheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Luacheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y luarocks
+          sudo luarocks install luacheck
+
+      - name: Run Luacheck
+        run: luacheck Contents/mods/SurvivorEconomy/media/lua/ --config .luacheckrc
+
+  stylua:
+    name: StyLua Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install StyLua
+        uses: JohnnyMorganz/stylua-action@v4
+        with:
+          token: ${{ github.token }}
+          version: latest
+          args: --check Contents/mods/SurvivorEconomy/media/lua/
