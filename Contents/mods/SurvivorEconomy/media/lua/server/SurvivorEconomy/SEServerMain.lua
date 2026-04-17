@@ -14,6 +14,7 @@ SEServerMain = {}
 --- @param args table
 local function onClientCommand(module, command, player, args)
     if module ~= SEConstants.MOD_ID then return end
+    if not args then return end
 
     -- Lazy-load server modules (they require server-only APIs)
     local SETraderManager = require "SurvivorEconomy/SETraderManager"
@@ -50,10 +51,13 @@ local function onClientCommand(module, command, player, args)
     end
 end
 
---- Periodic hourly check for trader restocks.
+--- Periodic hourly check for trader restocks and token decay.
 local function onEveryHours()
     local SETraderManager = require "SurvivorEconomy/SETraderManager"
     SETraderManager.restockAllTraders()
+
+    local SECurrencySink = require "SurvivorEconomy/SECurrencySink"
+    SECurrencySink.checkTokenDecay()
 end
 
 --- Initialize server state when global mod data is ready.

@@ -51,14 +51,12 @@ local function onFillWorldObjectContextMenu(playerIndex, context, worldObjects, 
     if not player then return end
 
     for _, worldObj in ipairs(worldObjects) do
-        -- Check if this is an IsoObject with an item attached
+        if not worldObj or not worldObj.getSquare then break end
         local square = worldObj:getSquare()
         if square then
             local objects = square:getObjects()
             for i = 0, objects:size() - 1 do
                 local obj = objects:get(i)
-                local sprite = obj:getSprite()
-                local objName = obj:getName()
 
                 -- Check object modData for trading post type
                 local modData = obj:getModData()
@@ -106,7 +104,9 @@ local function onPlaceTradingPost(player, item, traderType)
     end
 
     -- Create a new world object with a crate sprite
-    local isoObj = IsoObject.new(getCell(), square, "furniture_storage_02_0")
+    local cell = getCell()
+    if not cell then return end
+    local isoObj = IsoObject.new(cell, square, "furniture_storage_02_0")
     isoObj:setName("Trading Post")
     isoObj:getModData()["SE_TraderType"] = traderType
     square:AddSpecialObject(isoObj)

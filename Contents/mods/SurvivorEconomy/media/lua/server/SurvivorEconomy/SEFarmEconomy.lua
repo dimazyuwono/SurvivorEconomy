@@ -44,7 +44,11 @@ function SEFarmEconomy.useFarmItem(player, itemType, args)
         return { success = false, message = "No target location specified" }
     end
 
-    local square = getCell():getGridSquare(targetX, targetY, targetZ or 0)
+    local cell = getCell()
+    if not cell then
+        return { success = false, message = "Server error: could not access world" }
+    end
+    local square = cell:getGridSquare(targetX, targetY, targetZ or 0)
     if not square then
         return { success = false, message = "Invalid location" }
     end

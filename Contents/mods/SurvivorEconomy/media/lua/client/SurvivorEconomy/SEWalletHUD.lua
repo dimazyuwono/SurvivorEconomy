@@ -73,8 +73,8 @@ function SEWalletHUD:update()
 end
 
 --- Custom render with a subtle coin-colored top border.
-function SEWalletHUD:prerender()
-    ISPanel.prerender(self)
+function SEWalletHUD:render()
+    ISPanel.render(self)
     -- Draw a small gold accent line at the top
     self:drawRect(0, 0, self:getWidth(), 2, 0.8, 1, 0.85, 0.3)
 end

@@ -2,7 +2,9 @@
 -- Client-side entry point. Registers event handlers for server responses.
 
 require "SurvivorEconomy/SEConstants"
+require "SurvivorEconomy/SEUtils"
 require "SurvivorEconomy/SETraderUI"
+require "SurvivorEconomy/SEWalletHUD"
 
 SEClientMain = {}
 
@@ -42,10 +44,14 @@ local function onServerCommand(module, command, args)
 
     elseif command == SEConstants.RESP.SELL_RESULT then
         if args.success then
-            -- Refresh the UI
+            -- Refresh the UI with fresh data from server
             if SETraderUI.instance then
-                SETraderUI.instance:refreshSellList()
-                SETraderUI.instance:updateTokenDisplay()
+                local player = getPlayer()
+                if player then
+                    sendClientCommand(player, SEConstants.MOD_ID, SEConstants.CMD.REQUEST_TRADER, {
+                        traderType = SETraderUI.instance.traderType,
+                    })
+                end
             end
         else
             local player = getPlayer()
