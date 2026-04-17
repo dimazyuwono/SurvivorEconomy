@@ -188,9 +188,17 @@ end
 function SETraderManager.processSell(player, traderType, itemType, quantity)
     local container = player:getInventory()
 
-    -- Find the items in player inventory
-    local items = container:getItemsFromFullType(itemType)
-    if not items or items:size() < quantity then
+    -- Find the items in player inventory (B41-compatible manual iteration)
+    local matchingItems = {}
+    local allItems = container:getItems()
+    for i = 0, allItems:size() - 1 do
+        local item = allItems:get(i)
+        if item:getFullType() == itemType then
+            table.insert(matchingItems, item)
+        end
+    end
+
+    if #matchingItems < quantity then
         return { success = false, message = "You don't have enough of that item" }
     end
 
@@ -212,8 +220,7 @@ function SETraderManager.processSell(player, traderType, itemType, quantity)
 
     -- Execute transaction: remove items, add tokens
     for i = 1, quantity do
-        local item = items:get(i - 1)
-        container:Remove(item)
+        container:Remove(matchingItems[i])
     end
 
     SEUtils.addTokens(container, totalEarned)

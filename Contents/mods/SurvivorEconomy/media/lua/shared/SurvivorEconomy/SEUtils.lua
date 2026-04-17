@@ -8,14 +8,17 @@ require "SurvivorEconomy/SEConfig"
 SEUtils = {}
 
 --- Count the total token value in an inventory container.
+--- Iterates all items manually for B41 compatibility.
 --- @param container ItemContainer
 --- @return number total value in token units
 function SEUtils.countTokens(container)
     local total = 0
-    for _, denom in ipairs(SEConstants.DENOMINATIONS) do
-        local items = container:getItemsFromFullType(denom.type)
-        if items then
-            total = total + (items:size() * denom.value)
+    local allItems = container:getItems()
+    for i = 0, allItems:size() - 1 do
+        local item = allItems:get(i)
+        local value = SEConstants.CURRENCY_VALUES[item:getFullType()]
+        if value then
+            total = total + value
         end
     end
     return total
@@ -33,20 +36,30 @@ function SEUtils.removeTokens(container, amount)
 
     local remaining = amount
 
-    -- Remove from largest denomination first
+    -- Collect all currency items grouped by denomination
     for _, denom in ipairs(SEConstants.DENOMINATIONS) do
         if remaining <= 0 then break end
 
-        local items = container:getItemsFromFullType(denom.type)
-        if items then
-            local count = items:size()
-            local needed = math.floor(remaining / denom.value)
-            local toRemove = math.min(needed, count)
-
-            for i = 1, toRemove do
-                container:Remove(items:get(i - 1))
+        -- Collect matching items first (avoid modifying list while iterating)
+        local toRemoveList = {}
+        local allItems = container:getItems()
+        for i = 0, allItems:size() - 1 do
+            local item = allItems:get(i)
+            if item:getFullType() == denom.type then
+                table.insert(toRemoveList, item)
             end
-            remaining = remaining - (toRemove * denom.value)
+        end
+
+        local needed = math.floor(remaining / denom.value)
+        -- If we can't make exact change with smaller coins, take one extra
+        if needed == 0 and remaining > 0 and #toRemoveList > 0 then
+            needed = 1
+        end
+        local toRemove = math.min(needed, #toRemoveList)
+
+        for i = 1, toRemove do
+            container:Remove(toRemoveList[i])
+            remaining = remaining - denom.value
         end
     end
 
