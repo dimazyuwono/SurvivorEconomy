@@ -1,9 +1,5 @@
 name=Survivor Economy
 id=SurvivorEconomy
 description=Adds a currency and trading economy system with NPC traders, farming integration, and sustainable anti-inflation mechanics for long-running multiplayer campaigns.
-url=
 modversion=0.1.0
-pzversion=41.78
-require=
-icon=
 poster=poster.png

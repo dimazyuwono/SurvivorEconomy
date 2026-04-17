@@ -75,10 +75,77 @@ local function onFillWorldObjectContextMenu(playerIndex, context, worldObjects, 
                     tooltip:setVisible(false)
                     tooltip.description = "Your tokens: " .. tokenCount
                     option.toolTip = tooltip
+
+                    -- Add pickup option (admin)
+                    if player:isAccessLevel("admin") or player:isAccessLevel("moderator") then
+                        context:addOption("Pick Up " .. traderName, player, onPickupTradingPost, obj)
+                    end
                 end
             end
         end
     end
+end
+
+--- Place a Trading Post on the ground at the player's current square.
+--- Creates an IsoObject with a table/crate sprite and tags it with SE_TraderType.
+--- @param player IsoPlayer
+--- @param item InventoryItem the Trading Post item to consume
+--- @param traderType string
+local function onPlaceTradingPost(player, item, traderType)
+    local square = player:getCurrentSquare()
+    if not square then return end
+
+    -- Check if this square already has a trading post
+    local objects = square:getObjects()
+    for i = 0, objects:size() - 1 do
+        local obj = objects:get(i)
+        if obj:getModData() and obj:getModData()["SE_TraderType"] then
+            player:Say("There's already a Trading Post here.")
+            return
+        end
+    end
+
+    -- Create a new world object with a crate sprite
+    local isoObj = IsoObject.new(getCell(), square, "furniture_storage_02_0")
+    isoObj:setName("Trading Post")
+    isoObj:getModData()["SE_TraderType"] = traderType
+    square:AddSpecialObject(isoObj)
+    isoObj:transmitCompleteItemToClients()
+
+    -- Remove the item from inventory
+    player:getInventory():Remove(item)
+
+    local traderName = TRADER_NAMES[traderType] or "Trader"
+    player:Say("Placed " .. traderName .. " Trading Post.")
+end
+
+--- Remove a Trading Post world object from the ground.
+--- @param player IsoPlayer
+--- @param worldObj IsoObject the trading post object to remove
+local function onPickupTradingPost(player, worldObj)
+    local traderType = worldObj:getModData()["SE_TraderType"]
+    local square = worldObj:getSquare()
+
+    -- Give back the Trading Post item
+    local itemTypeMap = {
+        [SEConstants.TRADER_TYPE.GENERAL]  = "SurvivorEconomy.TradingPost_General",
+        [SEConstants.TRADER_TYPE.WEAPONS]  = "SurvivorEconomy.TradingPost_Weapons",
+        [SEConstants.TRADER_TYPE.MEDICAL]  = "SurvivorEconomy.TradingPost_Medical",
+        [SEConstants.TRADER_TYPE.BUILDING] = "SurvivorEconomy.TradingPost_Building",
+        [SEConstants.TRADER_TYPE.FARM]     = "SurvivorEconomy.TradingPost_Farm",
+        [SEConstants.TRADER_TYPE.LUXURY]   = "SurvivorEconomy.TradingPost_Luxury",
+    }
+
+    local itemType = itemTypeMap[traderType]
+    if itemType then
+        player:getInventory():AddItem(itemType)
+    end
+
+    -- Remove the world object
+    square:transmitRemoveItemFromSquare(worldObj)
+
+    local traderName = TRADER_NAMES[traderType] or "Trader"
+    player:Say("Picked up " .. traderName .. " Trading Post.")
 end
 
 --- Also check inventory items that are Trading Posts (for placed items).
@@ -103,7 +170,7 @@ local function onFillInventoryObjectContextMenu(playerIndex, context, items)
 
             if traderType then
                 local traderName = TRADER_NAMES[traderType] or "Trader"
-                context:addOption("Open " .. traderName, player, onTradeAction, traderType)
+                context:addOption("Place " .. traderName, player, onPlaceTradingPost, item, traderType)
             end
         end
     end

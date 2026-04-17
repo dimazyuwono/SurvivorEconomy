@@ -44,6 +44,9 @@ read_globals = {
     "ModData",
     "ScriptManager",
 
+    -- PZ world objects
+    "IsoObject",
+
     -- PZ UI framework
     "ISPanel",
     "ISButton",
