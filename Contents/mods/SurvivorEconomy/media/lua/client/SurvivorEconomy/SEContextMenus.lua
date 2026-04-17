@@ -2,6 +2,7 @@
 -- Client-side right-click context menu hooks for trading posts.
 -- Adds "Trade" option when player right-clicks a Trading Post world object.
 
+require "ISUI/ISToolTip"
 require "SurvivorEconomy/SEConstants"
 require "SurvivorEconomy/SEUtils"
 
@@ -69,7 +70,9 @@ local function onFillWorldObjectContextMenu(playerIndex, context, worldObjects, 
 
                     -- Show token count in tooltip
                     local tokenCount = SEUtils.countTokens(player:getInventory())
-                    local tooltip = ISWorldObjectContextMenu.addToolTip()
+                    local tooltip = ISToolTip:new()
+                    tooltip:initialise()
+                    tooltip:setVisible(false)
                     tooltip.description = "Your tokens: " .. tokenCount
                     option.toolTip = tooltip
                 end

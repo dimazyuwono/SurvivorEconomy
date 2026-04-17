@@ -50,6 +50,7 @@ read_globals = {
     "ISScrollingListBox",
     "ISLabel",
     "ISWorldObjectContextMenu",
+    "ISToolTip",
     "UIFont",
 
     -- Lua standard

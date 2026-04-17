@@ -7,6 +7,18 @@ require "SurvivorEconomy/SEUtils"
 
 SECurrencySink = {}
 
+--- B41-compatible ModData helper: get or create a global mod data table.
+--- @param key string
+--- @return table
+local function getOrCreateModData(key)
+    local data = ModData.get(key)
+    if not data then
+        ModData.create(key)
+        data = ModData.get(key)
+    end
+    return data
+end
+
 --- Handle player death: destroy a percentage of carried tokens.
 --- The remaining tokens stay on the corpse for looting.
 --- @param player IsoPlayer
@@ -35,7 +47,7 @@ function SECurrencySink.checkTokenDecay()
     local gameTime = getGameTime()
     local currentDay = gameTime:getNightsSurvived()
 
-    local state = ModData.getOrCreate(SEConstants.GLOBAL.ECONOMY_STATE)
+    local state = getOrCreateModData(SEConstants.GLOBAL.ECONOMY_STATE)
     if not state.lastDecayCheckDay then
         state.lastDecayCheckDay = currentDay
         return

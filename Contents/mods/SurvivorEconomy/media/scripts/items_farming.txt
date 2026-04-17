@@ -6,9 +6,7 @@ module SurvivorEconomy
         Icon = Item_Manure,
         Type = Normal,
         Weight = 2.0,
-        DisplayCategory = Economy,
         Tooltip = Tooltip_Manure,
-        Tags = FarmSupply,
     }
 
     item PremiumSeeds
@@ -17,9 +15,7 @@ module SurvivorEconomy
         Icon = Item_PremiumSeeds,
         Type = Normal,
         Weight = 0.3,
-        DisplayCategory = Economy,
         Tooltip = Tooltip_PremiumSeeds,
-        Tags = FarmSupply,
     }
 
     item IrrigationKit
@@ -28,9 +24,7 @@ module SurvivorEconomy
         Icon = Item_IrrigationKit,
         Type = Normal,
         Weight = 3.0,
-        DisplayCategory = Economy,
         Tooltip = Tooltip_IrrigationKit,
-        Tags = FarmSupply,
     }
 
     item PestSpray
@@ -39,8 +33,6 @@ module SurvivorEconomy
         Icon = Item_PestSpray,
         Type = Normal,
         Weight = 1.0,
-        DisplayCategory = Economy,
         Tooltip = Tooltip_PestSpray,
-        Tags = FarmSupply,
     }
 }

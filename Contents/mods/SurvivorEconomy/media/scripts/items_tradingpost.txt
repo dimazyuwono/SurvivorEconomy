@@ -6,10 +6,7 @@ module SurvivorEconomy
         Icon = Item_TradingPost,
         Type = Normal,
         Weight = 10,
-        DisplayCategory = Economy,
         Tooltip = Tooltip_TradingPost_General,
-        Tags = TradingPost,
-        WorldStaticModel = TradingPost,
     }
 
     item TradingPost_Weapons
@@ -18,10 +15,7 @@ module SurvivorEconomy
         Icon = Item_TradingPost,
         Type = Normal,
         Weight = 10,
-        DisplayCategory = Economy,
         Tooltip = Tooltip_TradingPost_Weapons,
-        Tags = TradingPost,
-        WorldStaticModel = TradingPost,
     }
 
     item TradingPost_Medical
@@ -30,10 +24,7 @@ module SurvivorEconomy
         Icon = Item_TradingPost,
         Type = Normal,
         Weight = 10,
-        DisplayCategory = Economy,
         Tooltip = Tooltip_TradingPost_Medical,
-        Tags = TradingPost,
-        WorldStaticModel = TradingPost,
     }
 
     item TradingPost_Building
@@ -42,10 +33,7 @@ module SurvivorEconomy
         Icon = Item_TradingPost,
         Type = Normal,
         Weight = 10,
-        DisplayCategory = Economy,
         Tooltip = Tooltip_TradingPost_Building,
-        Tags = TradingPost,
-        WorldStaticModel = TradingPost,
     }
 
     item TradingPost_Farm
@@ -54,10 +42,7 @@ module SurvivorEconomy
         Icon = Item_TradingPost,
         Type = Normal,
         Weight = 10,
-        DisplayCategory = Economy,
         Tooltip = Tooltip_TradingPost_Farm,
-        Tags = TradingPost,
-        WorldStaticModel = TradingPost,
     }
 
     item TradingPost_Luxury
@@ -66,9 +51,6 @@ module SurvivorEconomy
         Icon = Item_TradingPost,
         Type = Normal,
         Weight = 10,
-        DisplayCategory = Economy,
         Tooltip = Tooltip_TradingPost_Luxury,
-        Tags = TradingPost,
-        WorldStaticModel = TradingPost,
     }
 }

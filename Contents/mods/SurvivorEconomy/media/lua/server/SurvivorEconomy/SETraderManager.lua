@@ -8,10 +8,22 @@ require "SurvivorEconomy/SEItemValues"
 
 SETraderManager = {}
 
+--- B41-compatible ModData helper: get or create a global mod data table.
+--- @param key string
+--- @return table
+local function getOrCreateModData(key)
+    local data = ModData.get(key)
+    if not data then
+        ModData.create(key)
+        data = ModData.get(key)
+    end
+    return data
+end
+
 --- Initialize or retrieve the global trader state from GlobalModData.
 --- Called once on server start.
 function SETraderManager.initGlobalState()
-    local state = ModData.getOrCreate(SEConstants.GLOBAL.TRADER_STATE)
+    local state = getOrCreateModData(SEConstants.GLOBAL.TRADER_STATE)
 
     if not state.traders then
         state.traders = {}
@@ -72,7 +84,7 @@ end
 
 --- Restock all traders. Called periodically from EveryHours.
 function SETraderManager.restockAllTraders()
-    local state = ModData.getOrCreate(SEConstants.GLOBAL.TRADER_STATE)
+    local state = getOrCreateModData(SEConstants.GLOBAL.TRADER_STATE)
     if not state.traders then return end
 
     local gameTime = getGameTime()
@@ -97,7 +109,7 @@ end
 --- @param itemType string
 --- @return number|nil current price, or nil if not stocked
 function SETraderManager.getCurrentPrice(traderType, itemType)
-    local state = ModData.getOrCreate(SEConstants.GLOBAL.TRADER_STATE)
+    local state = getOrCreateModData(SEConstants.GLOBAL.TRADER_STATE)
     if not state.traders or not state.traders[traderType] then return nil end
 
     local trader = state.traders[traderType]
@@ -115,7 +127,7 @@ end
 --- @param quantity number
 --- @return table result {success, message, totalCost}
 function SETraderManager.processBuy(player, traderType, itemType, quantity)
-    local state = ModData.getOrCreate(SEConstants.GLOBAL.TRADER_STATE)
+    local state = getOrCreateModData(SEConstants.GLOBAL.TRADER_STATE)
     if not state.traders or not state.traders[traderType] then
         return { success = false, message = "Trader not found" }
     end
@@ -235,7 +247,7 @@ end
 --- @param traderType string
 --- @return table trader data for client display
 function SETraderManager.getTraderSnapshot(traderType)
-    local state = ModData.getOrCreate(SEConstants.GLOBAL.TRADER_STATE)
+    local state = getOrCreateModData(SEConstants.GLOBAL.TRADER_STATE)
     if not state.traders or not state.traders[traderType] then
         return { traderType = traderType, items = {} }
     end
